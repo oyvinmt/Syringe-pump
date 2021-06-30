@@ -1,6 +1,9 @@
 ## Partially adapted from pumpy written by Thomas W. Phillips
 ## https://github.com/tomwphillips/pumpy
-
+"""
+Created on Mon Jun  28 08:14:00 2021
+@author: Øyvind Taraldsen
+"""
 from __future__ import print_function 
 import serial
 class Chain(serial.Serial):

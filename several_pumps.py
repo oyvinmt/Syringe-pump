@@ -1,3 +1,11 @@
+"""
+Created on Mon Jun  28 08:14:00 2021
+
+@author: Øyvind Taraldsen
+
+"""
+
+
 import pygame
 import logpy as pumpy
 from datetime import datetime
@@ -6,18 +14,21 @@ import pygame.freetype
 import threading
 import time
 
+### sets communication ports for usb-serial, these must be set manually at the moment
 com1 = "COM6"
 com2 = "COM7"
 chain1 = pumpy.Chain(com1)
 chain2 = pumpy.Chain(com2)
 run = True
 
+## writes data to a logfile with the current time and date
 def write_log(logname ,string):
         now = datetime.now()
         dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
         with open (logname, "a") as file:
             file.write(dt_string + "    "+ string+ "\n")
 
+## creates logfile
 def create_log():
     now = datetime.now()
     dt_string = now.strftime("%Y-%m-%d-%H-%M-%S")
@@ -33,7 +44,7 @@ current_flowrate1 = ""
 current_flowrate2 = ""
 sem = threading.Semaphore()
 
-### flowrate threads could possibly have different semaphores as they use different ports
+### Gets the flowrate from a pump
 def get_flowrate1():
     global run
     while True:
