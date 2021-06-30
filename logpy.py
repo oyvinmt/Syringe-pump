@@ -1,9 +1,10 @@
+## Partially adapted from pumpy written by Thomas W. Phillips
+## https://github.com/tomwphillips/pumpy
+
 from __future__ import print_function 
 import serial
-import logging
 class Chain(serial.Serial):
     """Create Chain object.
-
     Harvard syringe pumps are daisy chained together in a 'pump chain'
     off a single serial port. A pump address is set on each pump. You
     must first create a chain to which you then add Pump objects.
@@ -17,10 +18,9 @@ class Chain(serial.Serial):
         serial.Serial.__init__(self,port=port, stopbits=serial.STOPBITS_TWO, parity=serial.PARITY_NONE, timeout=2)
         self.flushOutput()
         self.flushInput()
-        logging.info('Chain created on %s',port)
 
 class Pump:
-    """Create Pump object for Harvard Pump 11.
+    """Create Pump object.
 
     Argument:
         Chain: pump chain
@@ -33,7 +33,6 @@ class Pump:
         self.name = name
         self.serialcon = chain
         self.address = '{0:02.0f}'.format(address)
-
         try:
             self.write('ADDRESS')
             resp = self.read()
@@ -44,10 +43,6 @@ class Pump:
         except PumpError:
             self.serialcon.close()
             raise
-
-        logging.info('%s: created at address %s on %s', self.name,
-                      self.address, self.serialcon.port)
-
 
     def __repr__(self):
         string = ''
@@ -67,7 +62,6 @@ class Pump:
             response = response + temp
         return response.decode('utf-8')
 
-
     def logflowrate(self):
         self.write(self.address+'irate')
         resp = self.read()
@@ -78,11 +72,7 @@ class Pump:
 
     def setiflowrate(self, flowrate,unit):
         print(flowrate)
-
         self.write(self.address+'irate' + " "+ flowrate +" " +unit)
-        resp = self.read()
-        strings = resp.splitlines()
 
 class PumpError(Exception):
     pass
-

@@ -76,7 +76,7 @@ def gameloop():
     unit_pump_1 = ""
     unit_pump_2 = ""
 
-    screen = pygame.display.set_mode((800, 200))
+    screen = pygame.display.set_mode((600, 200))
     clock = pygame.time.Clock()
     font = pygame.font.SysFont("Arial", 24)
     textinput = pygame_textinput.TextInput(font_family="Arial", font_size = 24)
