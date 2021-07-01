@@ -14,13 +14,11 @@ import pygame.freetype
 import threading
 import time
 
-### sets communication ports for usb-serial, these must be set manually at the moment
+### sets communication ports for usb-serial, these must be set manually as the computer does not know what the pumps are
 com1 = "COM6"
 com2 = "COM7"
 com3 = "COM8"
-chain1 = pumpy.Chain(com1)
-chain2 = pumpy.Chain(com2)
-chain3 = pumpy.Chain(com3)
+
 run = True
 
 ## writes data to a logfile with the current time and date
@@ -41,9 +39,9 @@ def create_log():
 
 
 #### can be modified for n pumps
-p11 = pumpy.Pump(chain1,address=0) 
-p12 = pumpy.Pump(chain2, address=0)
-p13 = pumpy.Pump(chain3, address = 0)
+
+
+
 logfile = create_log()
 current_flowrate1 = ""
 current_flowrate2 = ""
@@ -126,6 +124,12 @@ def gameloop():
             if event.type == pygame.QUIT:
                 global run
                 run = False
+                global chain1
+                global chain2
+                global chain3
+                chain1.close()
+                chain2.close()
+                chain3.close()
                 exit()   
         
         loginfo1 = font.render('Current flowrate pump 1: '+current_flowrate1[3:], True, (0, 0, 0))
@@ -174,13 +178,32 @@ def gameloop():
         pygame.display.update()
         clock.tick(30)
     
-    chain.close()
+    
 
-flowrate_thread1 = threading.Thread(target=get_flowrate1)
-flowrate_thread1.start()
-flowrate_thread2 = threading.Thread(target=get_flowrate2)
-flowrate_thread2.start()
-flowrate_thread3 = threading.Thread(target=get_flowrate3)
-flowrate_thread3.start()
+
+try:
+    chain1 = pumpy.Chain(com1)
+    p11 = pumpy.Pump(chain1,address=0) 
+    flowrate_thread1 = threading.Thread(target=get_flowrate1)
+    flowrate_thread1.start()
+except:
+    print("No pump found, try reconnecting pump 1 on  "+ com1)
+try:
+    chain2 = pumpy.Chain(com2)
+    p12 = pumpy.Pump(chain2, address=0)
+    flowrate_thread2 = threading.Thread(target=get_flowrate2)
+    flowrate_thread2.start()
+except:
+    print("No pump found, try reconnecting pump 2 on  "+ com2)
+try:
+    chain3 = pumpy.Chain(com3)
+    p13 = pumpy.Pump(chain3, address = 0)
+    flowrate_thread3 = threading.Thread(target=get_flowrate3)
+    flowrate_thread3.start()
+except:
+    print("No pump found, try reconnecting pump 3 on "+ com3)
+
+
+
 pygame_thread = threading.Thread(target =gameloop)
 pygame_thread.start()
