@@ -37,11 +37,6 @@ def create_log():
         file.write("")
     return logname
 
-
-#### can be modified for n pumps
-
-
-
 logfile = create_log()
 current_flowrate1 = ""
 current_flowrate2 = ""
@@ -109,9 +104,9 @@ def get_flowrate3():
 ### main loop, draws to the screen and takes user input
 def gameloop():
     pygame.init()
-    unit_pump_1 = ""
-    unit_pump_2 = ""
-    unit_pump_3 = ""
+    unit_pump_1 = "u/h"
+    unit_pump_2 = "u/h"
+    unit_pump_3 = "u/h"
     screen = pygame.display.set_mode((600, 200))
     clock = pygame.time.Clock()
     font = pygame.font.SysFont("Arial", 24)
@@ -165,6 +160,8 @@ def gameloop():
                     p11.setiflowrate(textinput.get_text()[1:],unit_pump_1)
                 elif new_flowrate[0] =="2":
                     p12.setiflowrate(textinput.get_text()[1:],unit_pump_2)
+                elif new_flowrate[0] =="3":
+                    p12.setiflowrate(textinput.get_text()[1:],unit_pump_2)
                 textinput = pygame_textinput.TextInput(font_family="Arial", font_size = 24)
                 sem.release()
         screen.blit(inputinfo,(0,120))
@@ -178,9 +175,7 @@ def gameloop():
         pygame.display.update()
         clock.tick(30)
     
-    
-
-
+#### can be modified for n pumps
 try:
     chain1 = pumpy.Chain(com1)
     p11 = pumpy.Pump(chain1,address=0) 
@@ -202,7 +197,6 @@ try:
     flowrate_thread3.start()
 except:
     print("No pump found, try reconnecting pump 3 on "+ com3)
-
 
 
 pygame_thread = threading.Thread(target =gameloop)
